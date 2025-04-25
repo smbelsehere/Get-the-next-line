@@ -6,7 +6,7 @@
 /*   By: navera-m <navera-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:59:07 by navera-m          #+#    #+#             */
-/*   Updated: 2025/04/01 11:56:48 by navera-m         ###   ########.fr       */
+/*   Updated: 2025/04/25 15:49:18 by navera-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,12 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		i++;
 	}
 	j = 0;
-	//printf("len s2: %d\n", ft_strlen(s2));
-	//printf("s2: %s\n", s2);
 	while (ft_strlen(s2) > j && s2[j] != '\0' && j < 10)
 	{
-		//printf("j %d\n", j);
 		s3[i + j] = s2[j];
 		j++;
 	}
 	s3[i + j] = '\0';
-	//printf("join s3: %s\n", s3);
 	return (s3);
 }
 void	ft_bzero(void *s, int n)
