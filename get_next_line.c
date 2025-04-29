@@ -6,12 +6,11 @@
 /*   By: navera-m <navera-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:57:25 by navera-m          #+#    #+#             */
-/*   Updated: 2025/04/25 15:43:15 by navera-m         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:00:35 by navera-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> // detele me
 
 char	*ft_break_in_line(char *storage)
 {
@@ -23,10 +22,12 @@ char	*ft_break_in_line(char *storage)
 	i = 0;
 	while (storage[size] != '\0' && storage[size] != '\n')
 		size++;
-	if (storage[size] == '\0')
+	if (storage[size] == -1 || storage[0] == '\0')
 		return (storage);
 	size++;
 	tmp = ft_calloc(size + 1, sizeof(char));
+	if (!tmp)
+		return (NULL);
 	while (size > 0)
 	{
 		tmp[i] = storage[i];
@@ -35,6 +36,32 @@ char	*ft_break_in_line(char *storage)
 	}
 	return (tmp);
 }
+/* char	*ft_break_in_line(char *storage)
+{
+	char	*temp_string;
+	size_t	i;
+
+	i = 0;
+	if (!storage[i] || storage[i] == '\0')
+		return (NULL);
+	while (storage[i] && storage[i] != '\n')
+		i++;
+	temp_string = ft_calloc((i + 2), sizeof(char));
+	if (!temp_string)
+		return (NULL);
+	i = 0;
+	while (storage[i] && storage[i] != '\n')
+	{
+		temp_string[i] = storage[i];
+		i++;
+	}
+	if (storage[i] == '\n')
+	{
+		temp_string[i] = storage[i];
+		i++;
+	}
+	return (temp_string);
+} */
 /* char	*ft_break_in_line(char *storage)
 {
 	char		*tmp;
@@ -69,7 +96,7 @@ char	*ft_reader(int fd, char *str)
 	if (!str)
 		str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!str)
-		return (NULL);
+		return (free(str), NULL);
 	i = 1;
 	while (i > 0 && ft_gnl_strchr(str, '\n') != 1)
 	{
@@ -77,33 +104,52 @@ char	*ft_reader(int fd, char *str)
 		if (!tmp)
 			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		if (i < 0)
-			return (free (str), NULL);
-		str = ft_strjoin(str, tmp);
+		//printf("%i\n", i);
+		if (i < 0 || (i == 0 && str[0] == '\0'))
+			return (free(tmp), free (str), NULL);
 		if (i == 0)
-			return (str);
+			return (free(tmp), str);
+		str = ft_strjoin(str, tmp);
 		free(tmp);
 	}
 	return (str);
 }
 
+char	*ft_update_bufffer(char *b)
+{
+	char	*temp_string;
+	int		start;
+	int		i;
+
+	start = 0;
+	i = 0;
+	while (b[start] != '\0' && b[start] != '\n')
+		start++;
+	if (!b[start])
+		return (free(b), NULL);
+	temp_string = ft_calloc((ft_strlen(b) - start + 1), sizeof(char));
+	if (!temp_string)
+		return (NULL);
+	start++;
+	while (b[start] && b[start] != '\0')
+		temp_string[i++] = b[start++];
+	free(b);
+	return (temp_string);
+}
+
 char	*get_next_line(int fd)
 {
-	static char *storage;
-	char		*line; 
-	int			size;
+	static char	*storage;
+	char		*line;
 
-	if (fd > 0 || BUFFER_SIZE > 0)
-	{
-		storage = ft_reader(fd, storage);
-		if (!storage)
-			return (NULL);
-		line = ft_break_in_line(storage);
-		if (*line == '\0')
-			return (free(storage), NULL);
-		size = ft_strlen(line);
-		while (size-- > 0)
-			storage++;
-	}
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
+	storage = ft_reader(fd, storage);
+	if (!storage)
+		return (free(storage), NULL);
+	line = ft_break_in_line(storage);
+	if (*line == 0)
+		return (NULL);
+	storage = ft_update_bufffer(storage);
 	return (line);
 }

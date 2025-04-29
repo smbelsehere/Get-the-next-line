@@ -6,7 +6,7 @@
 /*   By: navera-m <navera-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:59:07 by navera-m          #+#    #+#             */
-/*   Updated: 2025/04/25 15:49:18 by navera-m         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:41:52 by navera-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,52 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-int	ft_gnl_strchr(const char *s, int c)
+/* char	*ft_gnl_strchr(char *s, int c)
 {
-	char	*p;
+	int	i;
 
-	p = (char *)s;
-	while (*p != '\0')
+	i = 0;
+	if (!s)
+		return (0);
+	if (c == '\0')
+		return ((char *)&s[ft_strlen(s)]);
+	while (s[i] != '\0')
 	{
-		if (*p == (char)c)
-			return (1);
-		p++;
+		if (s[i] == (char) c)
+			return ((char *)&s[i]);
+		i++;
 	}
-	if (*p == (char)c)
+	return (NULL);
+} */
+int	ft_gnl_strchr(char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
 		return (1);
-	
+	while (s[i] != '\0')
+	{
+		if (s[i] == (char)c)
+			return (1);
+		i++;
+	}
+	if (s[i] == (char)c)
+		return (1);
 	return (0);
 }
-char	*ft_strjoin(const char *s1, const char *s2)
+
+char	*ft_strjoin(char *s1, const char *s2)
 {
 	char	*s3;
-	int	size;
-	int	i;
-	int	j;
+	int		size;
+	int		i;
+	int		j;
+
 	size = (ft_strlen(s1) + ft_strlen(s2)) + 1;
 	s3 = malloc (sizeof(char) * size);
 	if (!s3)
-	return (NULL);
+		return (NULL);
 	i = 0;
 	while (ft_strlen(s1) > i && s1[i] != '\0')
 	{
@@ -55,17 +75,19 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		i++;
 	}
 	j = 0;
-	while (ft_strlen(s2) > j && s2[j] != '\0' && j < 10)
+	while (ft_strlen(s2) > j && s2[j] != '\0')
 	{
 		s3[i + j] = s2[j];
 		j++;
 	}
 	s3[i + j] = '\0';
+	free(s1);
 	return (s3);
 }
+
 void	ft_bzero(void *s, int n)
 {
-	int			i;
+	int				i;
 	unsigned char	*l;
 
 	i = 0;
@@ -76,10 +98,13 @@ void	ft_bzero(void *s, int n)
 		i++;
 	}
 }
-void	*ft_calloc(int nmemb, int size)
+
+void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned char	*p;
 
+	if (nmemb == 0 || size == 0)
+		return (NULL);
 	p = malloc(nmemb * size);
 	if (!p)
 		return (NULL);
