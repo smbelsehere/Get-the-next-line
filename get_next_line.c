@@ -6,7 +6,7 @@
 /*   By: navera-m <navera-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:57:25 by navera-m          #+#    #+#             */
-/*   Updated: 2025/04/29 14:00:35 by navera-m         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:10:04 by navera-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,24 +94,25 @@ char	*ft_reader(int fd, char *str)
 	int		i;
 
 	if (!str)
-		str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		str = ft_calloc(2, sizeof(char));
 	if (!str)
-		return (free(str), NULL);
+		return (NULL);
 	i = 1;
-	while (i > 0 && ft_gnl_strchr(str, '\n') != 1)
+	tmp = ft_calloc(BUFFER_SIZE + 2, sizeof(char));
+	if (!tmp)
+		return (NULL);
+	while (i != 0 && ft_gnl_strchr(str, '\n') != 1)
 	{
-		tmp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		if (!tmp)
-			return (NULL);
 		i = read(fd, tmp, BUFFER_SIZE);
-		//printf("%i\n", i);
-		if (i < 0 || (i == 0 && str[0] == '\0'))
+		if (i >= 0)
+			tmp[i] = '\0';
+		if (i == 0 && str[0] == '\0')
 			return (free(tmp), free (str), NULL);
-		if (i == 0)
-			return (free(tmp), str);
+		if (i < 0)
+			return (free(tmp), free(str), NULL);
 		str = ft_strjoin(str, tmp);
-		free(tmp);
 	}
+	free(tmp);
 	return (str);
 }
 
@@ -142,7 +143,7 @@ char	*get_next_line(int fd)
 	static char	*storage;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	storage = ft_reader(fd, storage);
 	if (!storage)

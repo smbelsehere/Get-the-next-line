@@ -6,7 +6,7 @@
 /*   By: navera-m <navera-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 13:59:11 by navera-m          #+#    #+#             */
-/*   Updated: 2025/04/29 14:12:26 by navera-m         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:10:19 by navera-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000000
+#  define BUFFER_SIZE 1
 # endif
 
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-
-
 
 int		ft_strlen(const char *s);
 int		ft_gnl_strchr(char *s, int c);
